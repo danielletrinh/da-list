@@ -25,6 +25,7 @@ export default function Home() {
   const [isHovering, setIsHovering] = useState<'toggle' | 'card' | 'clickable' | false>(false);
   const [sparkles, setSparkles] = useState<Array<{id: number, x: number, y: number, opacity: number, symbol: string}>>([]);
   const [clickedCards, setClickedCards] = useState<Set<string>>(new Set());
+  const [isHydrated, setIsHydrated] = useState(false);
   const sparkleId = useRef(0);
   const lastMouseMove = useRef(0);
 
@@ -217,6 +218,7 @@ export default function Home() {
 
   // Add global mouse tracking
   useEffect(() => {
+    setIsHydrated(true);
     document.addEventListener('mousemove', handleGlobalMouseMove);
     return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
   }, []);
@@ -397,17 +399,19 @@ export default function Home() {
                     </div>
 
                     {/* Tooltip */}
-                    <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
-                         style={{
-                           left: 'var(--mouse-x, 0px)',
-                           top: 'var(--mouse-y, 0px)',
-                           transform: 'translate(8px, 8px)',
-                           willChange: 'transform'
-                         }}>
-                      <div className="bg-gray-600/40 text-white text-xs px-2 py-1 rounded whitespace-nowrap backdrop-blur-sm">
-                        ⚲ {(cafe as GroupedCafe).locations.length > 1 ? 'various locations' : (cafe as GroupedCafe).locations[0] + ', ' + (cafe as GroupedCafe).region}
+                    {isHydrated && (
+                      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                           style={{
+                             left: 'var(--mouse-x, 0px)',
+                             top: 'var(--mouse-y, 0px)',
+                             transform: 'translate(8px, 8px)',
+                             willChange: 'transform'
+                           }}>
+                        <div className="bg-gray-600/40 text-white text-xs px-2 py-1 rounded whitespace-nowrap backdrop-blur-sm">
+                          ⚲ {(cafe as GroupedCafe).locations.length > 1 ? 'various locations' : (cafe as GroupedCafe).locations[0] + ', ' + (cafe as GroupedCafe).region}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
