@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { cafes } from '../data/cafes';
 import { Cafe, GroupedCafe } from '../types/cafe';
@@ -68,7 +68,7 @@ export default function Home() {
       : regionCafes.filter(cafe => cafe.features.includes('bubble tea')).length;
   };
 
-  const regions = ['recommended', 'all', ...Object.keys(cafesByRegion).sort()];
+  const regions = useMemo(() => ['recommended', 'all', ...Object.keys(cafesByRegion).sort()], [cafesByRegion]);
 
   // Filter cafés based on mode and region
   const currentCafes = useMemo(() => {
@@ -123,8 +123,8 @@ export default function Home() {
   // Preload images for better performance with optimized loading
   useEffect(() => {
     if (activeRegion === 'recommended' && isHydrated) {
-      // Only preload first 4 images to reduce initial load time
-      displayCafes.slice(0, 4).forEach((cafe) => {
+      // Only preload first 2 images to reduce initial load time
+      displayCafes.slice(0, 2).forEach((cafe) => {
         if (cafe.image) {
           const img = new window.Image();
           img.src = cafe.image;
@@ -137,11 +137,11 @@ export default function Home() {
   const coffeeCount = cafes.filter(cafe => cafe.features.includes('coffee') || cafe.features.includes('vietnamese coffee')).length;
   const bubbleTeaCount = cafes.filter(cafe => cafe.features.includes('bubble tea')).length;
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setIsCoffeeMode(!isCoffeeMode);
-  };
+  }, [isCoffeeMode]);
 
-  const handleCardClick = (cafeId: string) => {
+  const handleCardClick = useCallback((cafeId: string) => {
     setClickedCards(prev => {
       const newSet = new Set(prev);
       if (newSet.has(cafeId)) {
@@ -151,12 +151,12 @@ export default function Home() {
       }
       return newSet;
     });
-  };
+  }, []);
 
       // Mouse tracking for tooltips with throttling
   const handleMouseMove = (e: React.MouseEvent) => {
     const now = Date.now();
-    if (now - lastMouseMove.current < 8) return; // Reduced throttling for smoother tooltips
+    if (now - lastMouseMove.current < 16) return; // Increased throttling for better performance
     lastMouseMove.current = now;
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -182,19 +182,19 @@ export default function Home() {
     }
 
     // Create sparkle with throttling (disabled on mobile)
-    if (window.innerWidth > 768 && Math.random() < 0.15) {
+    if (window.innerWidth > 768 && Math.random() < 0.25) {
       const symbols = ['⋆', '.', '˚', '•'];
       const newSparkle = {
         id: sparkleId.current++,
-        x: e.clientX + (Math.random() - 0.5) * 20,
-        y: e.clientY + (Math.random() - 0.5) * 20,
+        x: e.clientX + (Math.random() - 0.5) * 30,
+        y: e.clientY + (Math.random() - 0.5) * 30,
         opacity: 0.8,
         symbol: symbols[Math.floor(Math.random() * symbols.length)]
       };
 
       setSparkles(prev => {
         const updated = [...prev, newSparkle];
-        return updated.slice(-15);
+        return updated.slice(-25);
       });
     }
   };
@@ -210,9 +210,9 @@ export default function Home() {
     const interval = setInterval(() => {
       setSparkles(prev => prev.map(sparkle => ({
         ...sparkle,
-        opacity: Math.max(0, sparkle.opacity - 0.15) // Faster fade
+        opacity: Math.max(0, sparkle.opacity - 0.15)
       })).filter(sparkle => sparkle.opacity > 0));
-    }, 100); // Slower interval (was 50ms)
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
@@ -367,13 +367,13 @@ export default function Home() {
                       {/* Color Swatch or Custom Image */}
                       <div className={`w-full h-48 ${
                         isCoffeeMode ? 'bg-coffee-headerBg' : 'bg-bubbleTea-headerBg'
-                      } flex items-center justify-center overflow-hidden transition-all duration-300`}>
+                      } flex items-center justify-center overflow-hidden`}>
                         {isClicked && cafe.image && (
                           <CafeImage
                             src={cafe.image}
                             alt={cafe.name}
                             isCoffeeMode={isCoffeeMode}
-                            priority={index < 4}
+                            priority={index < 2}
                           />
                         )}
                       </div>
@@ -421,8 +421,8 @@ export default function Home() {
             // Regular list layout for other tabs
             <div className="space-y-0">
               {currentCafes.map((cafe, index) => (
-                <div key={cafe.id} className={`flex items-start py-1 rounded px-2 transition-colors duration-300 group`}>
-                  <span className={`text-gray-500 text-sm font-mono mr-4 mt-1 min-w-[2rem] rounded-full px-2 py-1 transition-colors duration-300 ${
+                <div key={cafe.id} className={`flex items-start py-1 rounded px-2 group`}>
+                  <span className={`text-gray-500 text-sm font-mono mr-4 mt-1 min-w-[2rem] rounded-full px-2 py-1 ${
                     isCoffeeMode
                       ? 'group-hover:bg-coffee-headerBg group-hover:text-coffee-primary'
                       : 'group-hover:bg-bubbleTea-headerBg group-hover:text-bubbleTea-primary'
@@ -430,12 +430,12 @@ export default function Home() {
                     {index + 1}.
                   </span>
                   <div className="flex-1">
-                    <div className={`font-medium text-gray-900 transition-colors duration-300 ${
+                    <div className={`font-medium text-gray-900 ${
                       isCoffeeMode
                         ? 'group-hover:text-coffee-primary'
                         : 'group-hover:text-bubbleTea-primary'
                     }`}>{cafe.name}</div>
-                    <div className={`text-sm text-gray-600 mt-0.5 transition-colors duration-300 ${
+                    <div className={`text-sm text-gray-600 mt-0.5 ${
                       isCoffeeMode
                         ? 'group-hover:text-coffee-primary'
                         : 'group-hover:text-bubbleTea-primary'
@@ -444,7 +444,7 @@ export default function Home() {
                     </div>
                   </div>
                   {cafe.features && cafe.features.length > 0 && (
-                    <div className={`text-sm text-gray-500 ml-4 text-right italic transition-colors duration-300 ${
+                    <div className={`text-sm text-gray-500 ml-4 text-right italic ${
                       isCoffeeMode
                         ? 'group-hover:text-coffee-primary'
                         : 'group-hover:text-bubbleTea-primary'
