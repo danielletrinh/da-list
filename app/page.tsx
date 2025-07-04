@@ -347,10 +347,10 @@ export default function Home() {
                   ⛾ [ DA ] LIST .𖥔 ݁ ˖
                 </h1>
                 <p className="text-sm text-gray-700">
-                  danel's personal café list
+                  danel's WORK IN PROGRESS personal café list
                 </p>
                 <p className="text-sm text-gray-700">
-                  WORK IN PROGRESS – look on desktop not mobile pls
+                  mostly alphabetical for the time being, look on desktop not mobile pls
                 </p>
               </div>
               <div className="flex space-x-4">
