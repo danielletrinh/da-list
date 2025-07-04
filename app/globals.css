@@ -28,7 +28,7 @@ body {
 }
 
 /* Disable default cursor only on desktop */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   body {
     cursor: none;
   }
@@ -73,7 +73,7 @@ html {
 }
 
 /* Disable default cursor on clickable elements (desktop only) */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .toggle-button,
   .region-tab,
   .group {
