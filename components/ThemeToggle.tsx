@@ -8,6 +8,8 @@ interface ThemeToggleProps {
   disabled?: boolean;
   className?: string;
   size?: 'small' | 'large';
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({
@@ -18,6 +20,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   disabled = false,
   className = '',
   size = 'large',
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const coffeeRef = useRef<HTMLSpanElement>(null);
   const bubbleTeaRef = useRef<HTMLSpanElement>(null);
@@ -59,7 +63,9 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
         tabIndex={disabled ? -1 : 0}
         disabled={disabled}
         onClick={disabled ? undefined : onToggle}
-        className={`relative ${size === 'small' ? 'w-48 h-12' : 'w-56 h-14'} rounded-full border transition-all duration-300 flex items-center justify-between px-0 overflow-hidden backdrop-blur-lg select-none
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        className={`relative ${size === 'small' ? 'w-48 h-12' : 'w-56 h-14'} rounded-full border transition-all duration-300 flex items-center justify-between px-0 overflow-hidden backdrop-blur-lg select-none cursor-none
           ${isCoffeeMode ? 'bg-coffee-headerBg/50 border-coffee-primary/30 shadow-lg shadow-coffee-primary/20' : 'bg-bubbleTea-headerBg/50 border-bubbleTea-primary/30 shadow-lg shadow-bubbleTea-primary/20'}
           ${disabled ? 'pointer-events-none opacity-60 grayscale' : ''}
         `}

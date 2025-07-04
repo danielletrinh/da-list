@@ -29,6 +29,7 @@ export default function Home() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [showThemePopup, setShowThemePopup] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const sparkleId = useRef(0);
   const lastMouseMove = useRef(0);
 
@@ -102,6 +103,11 @@ export default function Home() {
       filtered = filtered.filter(cafe => cafe.recommended);
     } else if (activeRegion !== 'all') {
       filtered = filtered.filter(cafe => cafe.region === activeRegion);
+    }
+
+    // Sort alphabetically by name for all regions tab
+    if (activeRegion === 'all') {
+      filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     return filtered;
@@ -244,12 +250,27 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Add global mouse tracking
+    // Check if mobile and handle resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Add global mouse tracking (disabled on mobile)
   useEffect(() => {
     setIsHydrated(true);
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-    return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
-  }, []);
+
+    // Only add mouse tracking on desktop devices
+    if (!isMobile) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
+    }
+  }, [isMobile]);
 
   // Update document background color based on theme
   useEffect(() => {
@@ -282,18 +303,20 @@ export default function Home() {
         </div>
       ))}
 
-      {/* Custom Cursor */}
-      <div
-        className={`custom-cursor ${isHovering === 'card' ? 'hover' : ''} ${isHovering === 'toggle' ? 'hidden' : ''} ${isHovering === 'clickable' ? 'clickable' : ''}`}
-        style={{
-          left: cursorPosition.x - 10,
-          top: cursorPosition.y - 10,
-          '--primary-color': isCoffeeMode ? '#78634a' : '#5a7a4a',
-          zIndex: 10000
-        } as React.CSSProperties}
-      >
-        {isHovering === 'clickable' ? '⊹' : '𖧋'}
-      </div>
+      {/* Custom Cursor (hidden on mobile) */}
+      {!isMobile && (
+        <div
+          className={`custom-cursor ${isHovering === 'card' ? 'hover' : ''} ${isHovering === 'toggle' ? 'hidden' : ''} ${isHovering === 'clickable' ? 'clickable' : ''}`}
+          style={{
+            left: cursorPosition.x - 10,
+            top: cursorPosition.y - 10,
+            '--primary-color': isCoffeeMode ? '#78634a' : '#5a7a4a',
+            zIndex: 10000
+          } as React.CSSProperties}
+        >
+          {isHovering === 'clickable' ? '⊹' : '𖧋'}
+        </div>
+      )}
 
                         {/* Theme Selection Popup */}
       {showThemePopup && (
@@ -327,7 +350,7 @@ export default function Home() {
                   danel's personal café list
                 </p>
                 <p className="text-sm text-gray-700">
-                  loosely ranked based on quality + aesthetic + vibes
+                  WORK IN PROGRESS
                 </p>
               </div>
               <div className="flex space-x-4">
@@ -394,6 +417,8 @@ export default function Home() {
               bubbleTeaCount={bubbleTeaCount}
               onToggle={toggleTheme}
               size="small"
+              onMouseEnter={() => setIsHovering('clickable')}
+              onMouseLeave={() => setIsHovering(false)}
             />
           </div>
         </div>
@@ -499,7 +524,7 @@ export default function Home() {
                              willChange: 'transform'
                            }}>
                         <div className="bg-gray-600/40 text-white text-xs px-2 py-1 rounded whitespace-nowrap backdrop-blur-sm">
-                          ⚲ {(cafe as GroupedCafe).locations.length > 1 ? 'various locations' : (cafe as GroupedCafe).locations[0] + ', ' + (cafe as GroupedCafe).region}
+                          ⚲ {(cafe as GroupedCafe).locations.length > 1 || (cafe as GroupedCafe).locations.includes('[too many]') ? 'various locations in ' + (cafe as GroupedCafe).region : (cafe as GroupedCafe).locations[0] + ', ' + (cafe as GroupedCafe).region}
                         </div>
                       </div>
                     )}

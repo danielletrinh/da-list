@@ -24,8 +24,14 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  cursor: none;
   min-height: 100vh;
+}
+
+/* Disable default cursor only on desktop */
+@media (min-width: 769px) {
+  body {
+    cursor: none;
+  }
 }
 
 html {
@@ -66,9 +72,11 @@ html {
   color: black;
 }
 
-/* Disable default cursor on clickable elements */
-.toggle-button,
-.region-tab,
-.group {
-  cursor: none !important;
+/* Disable default cursor on clickable elements (desktop only) */
+@media (min-width: 769px) {
+  .toggle-button,
+  .region-tab,
+  .group {
+    cursor: none !important;
+  }
 }
