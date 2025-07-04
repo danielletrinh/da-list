@@ -350,7 +350,7 @@ export default function Home() {
                   danel's personal café list
                 </p>
                 <p className="text-sm text-gray-700">
-                  WORK IN PROGRESS
+                  WORK IN PROGRESS – look on desktop not mobile pls
                 </p>
               </div>
               <div className="flex space-x-4">
