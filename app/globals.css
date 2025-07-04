@@ -25,6 +25,12 @@ body {
     )
     rgb(var(--background-start-rgb));
   cursor: none;
+  min-height: 100vh;
+}
+
+html {
+  background: rgb(var(--background-start-rgb));
+  min-height: 100vh;
 }
 
 @layer utilities {

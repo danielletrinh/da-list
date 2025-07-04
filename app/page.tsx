@@ -6,6 +6,7 @@ import { cafes } from '../data/cafes';
 import { Cafe, GroupedCafe } from '../types/cafe';
 import { Inter, Overpass, DM_Serif_Display, Archivo } from 'next/font/google';
 import CafeImage from '../components/CafeImage';
+import ThemeToggle from '../components/ThemeToggle';
 
 const inter = Inter({ subsets: ['latin'] });
 const overpass = Overpass({ subsets: ['latin'] });
@@ -26,6 +27,8 @@ export default function Home() {
   const [sparkles, setSparkles] = useState<Array<{id: number, x: number, y: number, opacity: number, symbol: string}>>([]);
   const [clickedCards, setClickedCards] = useState<Set<string>>(new Set());
   const [isHydrated, setIsHydrated] = useState(false);
+  const [showThemePopup, setShowThemePopup] = useState(true);
+  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const sparkleId = useRef(0);
   const lastMouseMove = useRef(0);
 
@@ -68,7 +71,20 @@ export default function Home() {
       : regionCafes.filter(cafe => cafe.features.includes('bubble tea')).length;
   };
 
-  const regions = useMemo(() => ['recommended', 'all', ...Object.keys(cafesByRegion).sort()], [cafesByRegion]);
+  const regions = useMemo(() => {
+    const regionCounts = Object.keys(cafesByRegion).map(region => ({
+      name: region,
+      count: getFilteredRegionCount(region)
+    }));
+
+    // Sort regions by count (descending) and filter out regions with 0 cafes
+    const sortedRegions = regionCounts
+      .filter(region => region.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .map(region => region.name);
+
+    return ['recommended', 'all', ...sortedRegions];
+  }, [cafesByRegion, isCoffeeMode]);
 
   // Filter cafés based on mode and region
   const currentCafes = useMemo(() => {
@@ -141,6 +157,11 @@ export default function Home() {
     setIsCoffeeMode(!isCoffeeMode);
   }, [isCoffeeMode]);
 
+  const selectTheme = useCallback((theme: 'coffee' | 'bubble-tea') => {
+    setIsCoffeeMode(theme === 'coffee');
+    setShowThemePopup(false);
+  }, []);
+
   const handleCardClick = useCallback((cafeId: string) => {
     setClickedCards(prev => {
       const newSet = new Set(prev);
@@ -202,8 +223,14 @@ export default function Home() {
   // Handle mouse enter/leave for cursor scaling
   const handleMouseEnter = () => setIsHovering('card');
   const handleMouseLeave = () => setIsHovering(false);
-  const handlePantoneEnter = () => setIsHovering('clickable');
-  const handlePantoneLeave = () => setIsHovering(false);
+  const handlePantoneEnter = (cafeId: string) => () => {
+    setIsHovering('clickable');
+    setHoveredCardId(cafeId);
+  };
+  const handlePantoneLeave = () => {
+    setIsHovering(false);
+    setHoveredCardId(null);
+  };
 
   // Clean up sparkles
   useEffect(() => {
@@ -224,10 +251,20 @@ export default function Home() {
     return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
   }, []);
 
+  // Update document background color based on theme
+  useEffect(() => {
+    document.documentElement.style.backgroundColor = isCoffeeMode ? '#f5f1ed' : '#f0f7ed';
+    document.body.style.backgroundColor = isCoffeeMode ? '#f5f1ed' : '#f0f7ed';
+  }, [isCoffeeMode]);
+
+
+
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
       isCoffeeMode ? 'bg-coffee-pageBg' : 'bg-bubbleTea-pageBg'
-    }`}>
+    }`} style={{
+      backgroundColor: isCoffeeMode ? '#f5f1ed' : '#f0f7ed'
+    }}>
       {/* Sparkles */}
       {sparkles.map(sparkle => (
         <div
@@ -251,63 +288,116 @@ export default function Home() {
         style={{
           left: cursorPosition.x - 10,
           top: cursorPosition.y - 10,
-          '--primary-color': isCoffeeMode ? '#78634a' : '#5a7a4a'
+          '--primary-color': isCoffeeMode ? '#78634a' : '#5a7a4a',
+          zIndex: 10000
         } as React.CSSProperties}
       >
         {isHovering === 'clickable' ? '⊹' : '𖧋'}
       </div>
 
-      {/* Simple Header */}
-      <header className={`border-b border-gray-200 px-6 pt-16 pb-6 transition-colors duration-300 ${
-        isCoffeeMode ? 'bg-coffee-headerBg' : 'bg-bubbleTea-headerBg'
-      }`}>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
-            <div className="flex-1">
-              <h1 className={`text-3xl font-normal ${archivo.className} ${
-                isCoffeeMode ? 'text-coffee-primary' : 'text-bubbleTea-primary'
-              }`}>⛾ [ DA ] LIST .𖥔 ݁ ˖</h1>
-              <p className={`text-sm italic font-bold mt-1 ${
-                isCoffeeMode ? 'text-coffee-secondary' : 'text-bubbleTea-secondary'
-              }`}>danel's personal café list; loosely ranked based on quality + aesthetic + vibes ⊹₊⟡⋆</p>
+                        {/* Theme Selection Popup */}
+      {showThemePopup && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white/90 backdrop-blur-2xl rounded-lg p-8 max-w-2xl w-full shadow-2xl relative overflow-hidden border border-gray-200/50">
+            {/* Light glass base layer */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/40 to-gray-100/30"></div>
+            {/* Glass surface reflections */}
+            <div className="absolute inset-0 opacity-50">
+              <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/50 via-white/20 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-white/40 via-transparent to-transparent"></div>
             </div>
-
-            {/* Theme Toggle */}
-            <div className="flex items-center space-x-2 flex-shrink-0 self-end">
-              <div className="text-center">
-                <div className={`text-xs mb-1 ${
-                  isCoffeeMode ? 'text-coffee-primary' : 'text-gray-500'
-                }`}>{coffeeCount}</div>
-                <span className={`text-base ${
-                  isCoffeeMode ? 'text-coffee-secondary' : 'text-gray-600'
-                }`}>☕</span>
+            {/* Light depth and shadows */}
+            <div className="absolute inset-0 opacity-30 bg-gradient-to-b from-gray-200/20 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 opacity-25 bg-gradient-to-r from-gray-200/15 via-transparent to-transparent"></div>
+            {/* Subtle light glass texture */}
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-white/20 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 opacity-15 bg-gradient-to-tl from-white/15 via-transparent to-transparent"></div>
+            {/* Theme color hints */}
+            <div className="absolute top-0 left-0 w-1/2 h-1/2 opacity-10 bg-gradient-to-br from-coffee-primary/20 via-transparent to-transparent"></div>
+            <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-10 bg-gradient-to-tl from-bubbleTea-primary/20 via-transparent to-transparent"></div>
+            {/* Light glass edge highlights */}
+            <div className="absolute inset-0 opacity-30 bg-gradient-to-t from-white/40 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 opacity-25 bg-gradient-to-l from-white/30 via-transparent to-transparent"></div>
+            <div className="relative z-10">
+              <div className="text-center mb-8 pt-4">
+                <h1 className={`text-3xl font-normal ${archivo.className} text-gray-900 mb-2`}>
+                  ⛾ [ DA ] LIST .𖥔 ݁ ˖
+                </h1>
+                <p className="text-sm text-gray-700">
+                  danel's personal café list
+                </p>
+                <p className="text-sm text-gray-700">
+                  loosely ranked based on quality + aesthetic + vibes
+                </p>
               </div>
-              <button
-                onClick={toggleTheme}
-                onMouseEnter={() => setIsHovering('clickable')}
-                onMouseLeave={() => setIsHovering(false)}
-                className={`toggle-button relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
-                  isCoffeeMode ? 'bg-coffee-secondary' : 'bg-bubbleTea-secondary'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                    isCoffeeMode ? 'translate-x-1' : 'translate-x-6'
-                  }`}
-                />
-              </button>
-              <div className="text-center">
-                <div className={`text-xs mb-1 ${
-                  isCoffeeMode ? 'text-gray-500' : 'text-bubbleTea-primary'
-                }`}>{bubbleTeaCount}</div>
-                <span className={`text-base ${
-                  isCoffeeMode ? 'text-gray-600' : 'text-bubbleTea-secondary'
-                }`}>🧋</span>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => selectTheme('coffee')}
+                  onMouseEnter={() => setIsHovering('clickable')}
+                  onMouseLeave={() => setIsHovering(false)}
+                  className="flex-1 py-4 px-6 bg-white/70 backdrop-blur-lg hover:bg-coffee-primary hover:text-white transition-all duration-300 rounded-md text-center group relative overflow-hidden border border-gray-200/50"
+                >
+                  {/* Light glass card effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-white/30 to-transparent"></div>
+                  <div className="absolute inset-0 opacity-40 bg-gradient-to-t from-white/30 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 opacity-25 bg-gradient-to-l from-white/20 via-transparent to-transparent"></div>
+                  {/* Coffee color hint */}
+                  <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-coffee-primary/15 via-transparent to-transparent"></div>
+                  <div className="relative">
+                    <div className="text-lg font-semibold text-coffee-primary group-hover:text-white transition-colors">
+                      SEE COFFEE
+                    </div>
+                    <div className="text-sm text-coffee-secondary group-hover:text-white/80 transition-colors">
+                      {coffeeCount} cafés
+                    </div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => selectTheme('bubble-tea')}
+                  onMouseEnter={() => setIsHovering('clickable')}
+                  onMouseLeave={() => setIsHovering(false)}
+                  className="flex-1 py-4 px-6 bg-white/70 backdrop-blur-lg hover:bg-bubbleTea-primary hover:text-white transition-all duration-300 rounded-md text-center group relative overflow-hidden border border-gray-200/50"
+                >
+                  {/* Light glass card effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-white/30 to-transparent"></div>
+                  <div className="absolute inset-0 opacity-40 bg-gradient-to-t from-white/30 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 opacity-25 bg-gradient-to-l from-white/20 via-transparent to-transparent"></div>
+                  {/* Bubble tea color hint */}
+                  <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-bubbleTea-primary/15 via-transparent to-transparent"></div>
+                  <div className="relative">
+                    <div className="text-lg font-semibold text-bubbleTea-primary group-hover:text-white transition-colors">
+                      SEE BUBBLE TEA
+                    </div>
+                    <div className="text-sm text-bubbleTea-secondary group-hover:text-white/80 transition-colors">
+                      {bubbleTeaCount} cafés
+                    </div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      )}
+
+      {/* Spacer to prevent layout shift when popup appears */}
+      {showThemePopup && (
+        <div className="h-32"></div>
+      )}
+
+      {/* Theme Toggle (only shown after theme selection) */}
+      {!showThemePopup && (
+        <div className="px-4 mt-8 mb-8">
+          <div className="max-w-4xl mx-auto">
+            <ThemeToggle
+              isCoffeeMode={isCoffeeMode}
+              coffeeCount={coffeeCount}
+              bubbleTeaCount={bubbleTeaCount}
+              onToggle={toggleTheme}
+              size="small"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Region Tabs */}
       <div>
@@ -329,8 +419,8 @@ export default function Home() {
                   }`}
                 >
                   {region === 'all' ? 'all regions' : region === 'recommended' ? 'recommended' : region}
-                  <span className="ml-2 text-xs bg-gray-100 px-2 py-1 rounded-full">
-                    {getFilteredRegionCount(region)}
+                  <span className="ml-2 text-xs">
+                    ‹ {getFilteredRegionCount(region)} ›
                   </span>
                 </button>
               ))}
@@ -359,11 +449,11 @@ export default function Home() {
                     key={cafe.id}
                     className="w-full group relative cursor-pointer"
                     onMouseMove={handleMouseMove}
-                    onMouseEnter={handlePantoneEnter}
+                    onMouseEnter={handlePantoneEnter(cafe.id)}
                     onMouseLeave={handlePantoneLeave}
                     onClick={() => handleCardClick(cafe.id)}
                   >
-                    <div className="bg-white">
+                    <div className="bg-white rounded-sm">
                       {/* Color Swatch or Custom Image */}
                       <div className={`w-full h-48 ${
                         isCoffeeMode ? 'bg-coffee-headerBg' : 'bg-bubbleTea-headerBg'
@@ -400,8 +490,8 @@ export default function Home() {
                     </div>
 
                     {/* Tooltip */}
-                    {isHydrated && (
-                      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                    {hoveredCardId === cafe.id && (
+                      <div className="absolute opacity-100 transition-opacity duration-200 pointer-events-none z-10"
                            style={{
                              left: 'var(--mouse-x, 0px)',
                              top: 'var(--mouse-y, 0px)',
@@ -422,7 +512,7 @@ export default function Home() {
             <div className="space-y-0">
               {currentCafes.map((cafe, index) => (
                 <div key={cafe.id} className={`flex items-start py-1 rounded px-2 group`}>
-                  <span className={`text-gray-500 text-sm font-mono mr-4 mt-1 min-w-[2rem] rounded-full px-2 py-1 ${
+                  <span className={`text-gray-500 text-sm font-mono mr-4 mt-1 w-12 text-right rounded-full px-2 py-1 ${
                     isCoffeeMode
                       ? 'group-hover:bg-coffee-headerBg group-hover:text-coffee-primary'
                       : 'group-hover:bg-bubbleTea-headerBg group-hover:text-bubbleTea-primary'
