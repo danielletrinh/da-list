@@ -8,7 +8,7 @@ export const cafes: Cafe[] = [
     region: 'san diego, CA, USA',
     features: ['matcha','coffee', 'pastries'],
     recommended: true,
-    image: '/images/cafes/rikka-fika.JPG'
+    image: '/images/cafes/rikka-fika.jpeg'
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ export const cafes: Cafe[] = [
     region: 'san diego, CA, USA',
     features: ['coffee', 'food'],
     recommended: true,
-    image: '/images/cafes/dot-cafe.JPG'
+    image: '/images/cafes/dot-cafe.jpeg'
   },
   {
     id: '3',
@@ -26,7 +26,7 @@ export const cafes: Cafe[] = [
     region: 'san diego, CA, USA',
     features: ['vietnamese coffee'],
     recommended: true,
-    image: '/images/cafes/em-coffee-house.JPG'
+    image: '/images/cafes/em-coffee-house.jpeg'
   },
   {
     id: '4',
@@ -35,7 +35,7 @@ export const cafes: Cafe[] = [
     region: 'china',
     features: ['matcha', 'coffee', 'tea'],
     recommended: true,
-    image: '/images/cafes/orenda-bay.JPG'
+    image: '/images/cafes/orenda-bay.jpeg'
   },
   {
     id: '5',
@@ -44,7 +44,7 @@ export const cafes: Cafe[] = [
     region: 'vietnam',
     features: ['vietnamese coffee'],
     recommended: true,
-    image: '/images/cafes/cafe-dinh.JPG'
+    image: '/images/cafes/cafe-dinh.jpeg'
   },
   {
     id: '6',
@@ -53,7 +53,7 @@ export const cafes: Cafe[] = [
     region: 'vietnam',
     features: ['matcha', 'coffee', 'interesting drinks'],
     recommended: true,
-    image: '/images/cafes/mono-coffee-lab.JPG'
+    image: '/images/cafes/mono-coffee-lab.jpeg'
   },
   {
     id: '7',
@@ -62,7 +62,7 @@ export const cafes: Cafe[] = [
     region: 'denmark',
     features: ['matcha', 'coffee', 'food'],
     recommended: true,
-    image: '/images/cafes/mori.JPG'
+    image: '/images/cafes/mori.jpeg'
   },
   {
     id: '8',
@@ -71,7 +71,7 @@ export const cafes: Cafe[] = [
     region: 'denmark',
     features: ['vietnamese coffee', 'food'],
     recommended: true,
-    image: '/images/cafes/non-la-coffee.JPG'
+    image: '/images/cafes/non-la-coffee.jpeg'
   },
   {
     id: '9',
@@ -80,7 +80,7 @@ export const cafes: Cafe[] = [
     region: 'san gabriel valley, CA, USA',
     features: ['bubble tea'],
     recommended: true,
-    image: '/images/cafes/3catea.JPG'
+    image: '/images/cafes/3catea.jpeg'
   },
   {
     id: '10',
@@ -113,6 +113,6 @@ export const cafes: Cafe[] = [
     region: 'san gabriel valley, CA, USA',
     features: ['bubble tea'],
     recommended: true,
-    image: '/images/cafes/chicha.JPG'
+    image: '/images/cafes/chicha.jpeg'
   }
 ];

@@ -120,17 +120,18 @@ export default function Home() {
   // Use grouped cafes for recommended view, regular cafes for others
   const displayCafes = activeRegion === 'recommended' ? groupedCafes : currentCafes;
 
-  // Preload images for better performance
+  // Preload images for better performance with optimized loading
   useEffect(() => {
-    if (activeRegion === 'recommended') {
-      displayCafes.forEach((cafe, index) => {
-        if (index < 8 && cafe.image) {
+    if (activeRegion === 'recommended' && isHydrated) {
+      // Only preload first 4 images to reduce initial load time
+      displayCafes.slice(0, 4).forEach((cafe) => {
+        if (cafe.image) {
           const img = new window.Image();
           img.src = cafe.image;
         }
       });
     }
-  }, [displayCafes, activeRegion]);
+  }, [displayCafes, activeRegion, isHydrated]);
 
   // Count cafés by type
   const coffeeCount = cafes.filter(cafe => cafe.features.includes('coffee') || cafe.features.includes('vietnamese coffee')).length;
@@ -372,7 +373,7 @@ export default function Home() {
                             src={cafe.image}
                             alt={cafe.name}
                             isCoffeeMode={isCoffeeMode}
-                            priority={index < 8}
+                            priority={index < 4}
                           />
                         )}
                       </div>
