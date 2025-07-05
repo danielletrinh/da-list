@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Overpass, DM_Serif_Display, Archivo } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -29,6 +31,8 @@ export default function RootLayout({
         <div className="min-h-screen bg-gray-50">
           {children}
         </div>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
