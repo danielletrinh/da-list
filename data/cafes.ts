@@ -25,8 +25,7 @@ export const cafes: Cafe[] = [
     location: 'mira mesa',
     region: 'san diego, CA, USA',
     features: ['vietnamese coffee'],
-    recommended: true,
-    image: '/images/cafes/em-coffee-house.jpeg'
+    recommended: false
   },
   {
     id: '4',
@@ -1635,8 +1634,7 @@ export const cafes: Cafe[] = [
     location: 'north park',
     region: 'san diego, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/haven.jpeg'
+    recommended: false
   },
   {
     id: '203',
@@ -1644,8 +1642,7 @@ export const cafes: Cafe[] = [
     location: 'pacific beach',
     region: 'san diego, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/elixir.jpeg'
+    recommended: false
   },
   {
     id: '204',
@@ -1671,8 +1668,7 @@ export const cafes: Cafe[] = [
     location: 'bankers hill',
     region: 'san diego, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/mostra.jpeg'
+    recommended: false
   },
   {
     id: '207',
@@ -1680,8 +1676,7 @@ export const cafes: Cafe[] = [
     location: 'bankers hill',
     region: 'san diego, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/iconic-coffee-club.jpeg'
+    recommended: false
   },
   {
     id: '208',
@@ -1689,8 +1684,7 @@ export const cafes: Cafe[] = [
     location: 'mission hills',
     region: 'san diego, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/paradis.jpeg'
+    recommended: false
   },
   {
     id: '209',
@@ -2253,17 +2247,15 @@ export const cafes: Cafe[] = [
     location: 'sawtelle',
     region: 'los angeles, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/bonsai-coffee-bar.jpeg'
+    recommended: false
   },
   {
     id: '279',
     name: 'about time',
     location: 'ktown',
     region: 'los angeles, CA, USA',
-    features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/about-time.jpeg'
+    features: ['coffee', 'good for working'],
+    recommended: false
   },
   {
     id: '280',
@@ -2290,7 +2282,7 @@ export const cafes: Cafe[] = [
     region: 'los angeles, CA, USA',
     features: ['coffee', 'great for working'],
     recommended: true,
-    image: '/images/cafes/stereoscope-coffee.jpeg'
+    image: '/images/cafes/stereoscope.jpeg'
   },
   {
     id: '283',
@@ -2306,8 +2298,7 @@ export const cafes: Cafe[] = [
     location: 'highland park',
     region: 'los angeles, CA, USA',
     features: ['coffee', 'good for working'],
-    recommended: true,
-    image: '/images/cafes/olive-and-james.jpeg'
+    recommended: false
   },
   {
     id: '285',
@@ -2315,8 +2306,7 @@ export const cafes: Cafe[] = [
     location: 'ktown',
     region: 'los angeles, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/3thyme-coffee.jpeg'
+    recommended: false
   },
   {
     id: '286',
@@ -2420,8 +2410,7 @@ export const cafes: Cafe[] = [
     location: 'burbank',
     region: 'los angeles, CA, USA',
     features: ['coffee'],
-    recommended: true,
-    image: '/images/cafes/portos-bakery.jpeg'
+    recommended: false
   },
   {
     id: '299',
@@ -2429,7 +2418,8 @@ export const cafes: Cafe[] = [
     location: 'northridge',
     region: 'los angeles, CA, USA',
     features: ['coffee', 'great for working'],
-    recommended: false
+    recommended: true,
+    image: '/images/cafes/portos.jpeg'
   },
   {
     id: '300',
@@ -2565,7 +2555,7 @@ export const cafes: Cafe[] = [
     name: 'september',
     location: 'westminster',
     region: 'orange county, CA, USA',
-    features: ['coffee', 'great for working'],
+    features: ['vietnamese coffee', 'great for working'],
     recommended: true,
     image: '/images/cafes/september.jpeg'
   },
@@ -2574,7 +2564,7 @@ export const cafes: Cafe[] = [
     name: 'da vien coffee',
     location: 'westminster',
     region: 'orange county, CA, USA',
-    features: ['coffee', 'good for working'],
+    features: ['vietnamese coffee', 'good for working'],
     recommended: true,
     image: '/images/cafes/da-vien.jpeg'
   },
@@ -2600,7 +2590,7 @@ export const cafes: Cafe[] = [
     location: 'buena park',
     region: 'orange county, CA, USA',
     features: ['coffee'],
-    recommended: false
+    recommended: true
   },
   {
     id: '321',
@@ -2880,8 +2870,7 @@ export const cafes: Cafe[] = [
     location: '上海 / shanghai',
     region: 'china',
     features: ['coffee', 'cat café'],
-    recommended: true,
-    image: '/images/cafes/catier.jpeg'
+    recommended: false
   },
   {
     id: '355',
@@ -2978,7 +2967,8 @@ export const cafes: Cafe[] = [
     location: '台北 / taipei',
     region: 'taiwan',
     features: ['coffee', 'good for working'],
-    recommended: false
+    recommended: true,
+    image: '/images/cafes/aka-cafe.jpeg'
   },
   {
     id: '367',
@@ -3003,8 +2993,7 @@ export const cafes: Cafe[] = [
     location: 'boston',
     region: 'massachusetts, USA',
     features: ['coffee'],
-    recommended: true,
-    image: '/images/cafes/beacon-hill.jpeg'
+    recommended: false
   },
   {
     id: '370',
@@ -3021,8 +3010,7 @@ export const cafes: Cafe[] = [
     location: 'cambridge',
     region: 'massachusetts, USA',
     features: ['coffee'],
-    recommended: true,
-    image: '/images/cafes/faro-cafe.jpeg'
+    recommended: false
   },
   {
     id: '372',
@@ -3159,7 +3147,8 @@ export const cafes: Cafe[] = [
     location: 'denver',
     region: 'USA (misc.)',
     features: ['coffee', 'good for working'],
-    recommended: false
+    recommended: true,
+    image: '/images/cafes/ti-cafe.jpeg'
   },
   {
     id: '389',
@@ -3219,12 +3208,11 @@ export const cafes: Cafe[] = [
   },
   {
     id: '396',
-    name: 'H·SPACE CAFE',
+    name: 'H•SPACE CAFE',
     location: '北京 / beijing',
     region: 'china',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/h-space.jpeg'
+    recommended: false
   },
   {
     id: '397',
@@ -3283,8 +3271,7 @@ export const cafes: Cafe[] = [
     location: '天津 / tianjin',
     region: 'china',
     features: ['coffee', 'good for working'],
-    recommended: true,
-    image: '/images/cafes/shino-cafe-bar.jpeg'
+    recommended: false
   },
   {
     id: '404',
@@ -3293,7 +3280,7 @@ export const cafes: Cafe[] = [
     region: 'china',
     features: ['coffee'],
     recommended: true,
-    image: '/images/cafes/san-wang-hu-coffee.jpeg'
+    image: '/images/cafes/san-wang-hu.jpeg'
   },
   {
     id: '405',
@@ -3310,8 +3297,7 @@ export const cafes: Cafe[] = [
     location: '北京 / beijing',
     region: 'china',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/metaspace.jpeg'
+    recommended: false
   },
   {
     id: '407',
@@ -3336,7 +3322,8 @@ export const cafes: Cafe[] = [
     location: '北京 / beijing',
     region: 'china',
     features: ['coffee', 'good for working'],
-    recommended: false
+    recommended: true,
+    image: '/images/cafes/mplus.jpeg'
   },
   {
     id: '410',
@@ -3371,7 +3358,7 @@ export const cafes: Cafe[] = [
     region: 'china',
     features: ['coffee', 'great for working'],
     recommended: true,
-    image: '/images/cafes/fu3-coffee.jpeg'
+    image: '/images/cafes/fu3.jpeg'
   },
   {
     id: '414',
@@ -3445,8 +3432,7 @@ export const cafes: Cafe[] = [
     location: '清华 / tsinghua, beijing',
     region: 'china',
     features: ['coffee', 'great for working'],
-    recommended: true,
-    image: '/images/cafes/mongs-coffee.jpeg'
+    recommended: false
   },
   {
     id: '423',
@@ -3513,8 +3499,7 @@ export const cafes: Cafe[] = [
     location: '阳朔 / yangshuo',
     region: 'china',
     features: ['coffee'],
-    recommended: true,
-    image: '/images/cafes/ai-xin-xiang-cun.jpeg'
+    recommended: false
   },
   {
     id: '431',
@@ -3523,7 +3508,7 @@ export const cafes: Cafe[] = [
     region: 'china',
     features: ['coffee'],
     recommended: true,
-    image: '/images/cafes/fiye-coffee.jpeg'
+    image: '/images/cafes/fiye.jpeg'
   },
   {
     id: '432',
@@ -3627,12 +3612,11 @@ export const cafes: Cafe[] = [
   },
   {
     id: '444',
-    name: '徽巷咖啡 · alley cafe',
+    name: '徽巷咖啡 • alley cafe',
     location: '黄山 / huangshan',
     region: 'china',
     features: ['coffee', 'good for working'],
-    recommended: true,
-    image: '/images/cafes/alley-cafe.jpeg'
+    recommended: false
   },
   {
     id: '445',
@@ -3722,8 +3706,7 @@ export const cafes: Cafe[] = [
     location: 'københavn / copenhagen',
     region: 'denmark',
     features: ['coffee', 'good for working'],
-    recommended: true,
-    image: '/images/cafes/det-vide-hus.jpeg'
+    recommended: false
   },
   {
     id: '456',

@@ -142,18 +142,48 @@ export default function Home() {
   // Use grouped cafes for recommended view, regular cafes for others
   const displayCafes = activeRegion === 'recommended' ? groupedCafes : currentCafes;
 
-  // Preload images for better performance with optimized loading
+    // Enhanced image preloading system
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
+  const [isPreloading, setIsPreloading] = useState(false);
+
+  // Preload images for better performance
   useEffect(() => {
-    if (activeRegion === 'recommended' && isHydrated) {
-      // Only preload first 2 images to reduce initial load time
-      displayCafes.slice(0, 2).forEach((cafe) => {
-        if (cafe.image) {
-          const img = new window.Image();
-          img.src = cafe.image;
-        }
+    if (!isHydrated) return;
+
+    const preloadImage = (src: string) => {
+      return new Promise<void>((resolve, reject) => {
+        const img = new window.Image();
+        img.onload = () => {
+          setPreloadedImages(prev => new Set(Array.from(prev).concat([src])));
+          resolve();
+        };
+        img.onerror = reject;
+        img.src = src;
       });
-    }
-  }, [displayCafes, activeRegion, isHydrated]);
+    };
+
+    const preloadVisibleImages = async () => {
+      setIsPreloading(true);
+      const imagesToPreload = displayCafes
+        .filter(cafe => cafe.image && !preloadedImages.has(cafe.image))
+        .slice(0, 8); // Preload up to 8 images at a time
+
+      if (imagesToPreload.length > 0) {
+        try {
+          await Promise.allSettled(
+            imagesToPreload.map(cafe => preloadImage(cafe.image!))
+          );
+        } catch (error) {
+          console.warn('Some images failed to preload:', error);
+        }
+      }
+      setIsPreloading(false);
+    };
+
+    // Preload images with a small delay to avoid blocking initial render
+    const timeoutId = setTimeout(preloadVisibleImages, 200);
+    return () => clearTimeout(timeoutId);
+  }, [displayCafes, isHydrated, preloadedImages]);
 
   // Count cafés by type
   const coffeeCount = cafes.filter(cafe => cafe.features.includes('coffee') || cafe.features.includes('vietnamese coffee')).length;
@@ -489,6 +519,7 @@ export default function Home() {
                             alt={cafe.name}
                             isCoffeeMode={isCoffeeMode}
                             priority={index < 2}
+                            isPreloaded={preloadedImages.has(cafe.image)}
                           />
                         )}
                       </div>
@@ -573,6 +604,9 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      {/* Footer spacing */}
+      <div className="h-16"></div>
     </div>
   );
 }
