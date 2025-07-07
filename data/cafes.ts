@@ -3733,4 +3733,12 @@ export const cafes: Cafe[] = [
     recommended: true,
     image: '/images/cafes/mngo-cafe.jpeg'
   },
+  {
+    id: '459',
+    name: 'the artisan copenhagen',
+    location: 'københavn / copenhagen',
+    region: 'denmark',
+    features: ['coffee', 'great for working'],
+    recommended: false
+  }
 ];
