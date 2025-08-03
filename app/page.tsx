@@ -569,7 +569,7 @@ export default function Home() {
                   >
                     <div className="bg-white rounded-sm">
                       {/* Color Swatch or Custom Image */}
-                      <div className={`w-full aspect-[4/3] ${
+                      <div className={`w-full h-48 ${
                         isCoffeeMode ? 'bg-coffee-headerBg' : 'bg-bubbleTea-headerBg'
                       } flex items-center justify-center overflow-hidden`}>
                         {cafe.image && (
