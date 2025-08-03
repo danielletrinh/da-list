@@ -4,6 +4,16 @@ import { cafeService } from '@/lib/supabase'
 export async function GET(request: Request) {
   try {
     console.log('API route called');
+
+    // Check if environment variables are set
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Supabase environment variables are not set');
+      return NextResponse.json(
+        { error: 'Database configuration error' },
+        { status: 500 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const recommended = searchParams.get('recommended')
     console.log('Recommended param:', recommended);

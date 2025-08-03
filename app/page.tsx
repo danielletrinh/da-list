@@ -489,10 +489,10 @@ export default function Home() {
         <div className="h-32"></div>
       )}
 
-      {/* Theme Toggle (only shown after theme selection) */}
-      {!showThemePopup && (
-        <div className="px-4 mt-8 mb-8">
-          <div className="max-w-4xl mx-auto">
+                {/* Theme Toggle (only shown after theme selection) */}
+          {!showThemePopup && (
+            <div className="px-4 sm:px-6 mt-8 mb-8">
+              <div className="max-w-4xl mx-auto">
             <ThemeToggle
               isCoffeeMode={isCoffeeMode}
               coffeeCount={coffeeCount}
@@ -508,7 +508,7 @@ export default function Home() {
 
       {/* Loading State */}
       {isLoading && (
-        <div className="px-6 py-6">
+        <div className="px-4 sm:px-6 py-6">
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-gray-500">Loading cafés...</p>
           </div>
@@ -518,9 +518,9 @@ export default function Home() {
       {/* Region Tabs */}
       {!isLoading && (
         <div>
-          <div className="px-6">
+          <div className="px-4 sm:px-6">
             <div className="max-w-4xl mx-auto">
-              <nav className="flex space-x-8 overflow-x-auto pb-2 -mb-2">
+              <nav className="flex space-x-4 sm:space-x-8 overflow-x-auto pb-2 -mb-2">
                 {regions.map((region) => (
                   <button
                     key={region}
@@ -549,7 +549,7 @@ export default function Home() {
 
             {/* Simple Numbered List */}
       {!isLoading && (
-        <div className="px-6 py-6">
+        <div className="px-4 sm:px-6 py-6">
           <div className="max-w-4xl mx-auto">
             {currentCafes.length === 0 ? (
               <div className="text-center py-12">
@@ -557,27 +557,22 @@ export default function Home() {
               </div>
             ) : activeRegion === 'recommended' ? (
             // Pantone tile layout for recommended
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {displayCafes.map((cafe, index) => {
-                const isClicked = clickedCards.has(cafe.id);
-
-
-
                 return (
                   <div
                     key={cafe.id}
-                    className="w-full group relative cursor-pointer"
+                    className="w-full group relative"
                     onMouseMove={handleMouseMove}
                     onMouseEnter={handlePantoneEnter(cafe.id)}
                     onMouseLeave={handlePantoneLeave}
-                    onClick={() => handleCardClick(cafe.id)}
                   >
                     <div className="bg-white rounded-sm">
                       {/* Color Swatch or Custom Image */}
-                      <div className={`w-full h-48 ${
+                      <div className={`w-full aspect-[4/3] ${
                         isCoffeeMode ? 'bg-coffee-headerBg' : 'bg-bubbleTea-headerBg'
                       } flex items-center justify-center overflow-hidden`}>
-                        {isClicked && cafe.image && (
+                        {cafe.image && (
                           <CafeImage
                             src={cafe.image}
                             alt={cafe.name}
