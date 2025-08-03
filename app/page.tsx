@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { cafes } from '../data/cafes';
 import { Cafe, GroupedCafe } from '../types/cafe';
 import { Inter, Overpass, DM_Serif_Display, Archivo } from 'next/font/google';
 import CafeImage from '../components/CafeImage';
@@ -20,6 +19,8 @@ const archivo = Archivo({
 });
 
 export default function Home() {
+  const [cafes, setCafes] = useState<Cafe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeRegion, setActiveRegion] = useState<string>('recommended');
   const [isCoffeeMode, setIsCoffeeMode] = useState<boolean>(true);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
@@ -35,6 +36,7 @@ export default function Home() {
 
   // Group cafés by region
   const cafesByRegion = useMemo(() => {
+    console.log('cafesByRegion useMemo - cafes length:', cafes.length);
     const grouped = cafes.reduce((acc, cafe) => {
       const region = cafe.region;
       if (!acc[region]) {
@@ -49,8 +51,9 @@ export default function Home() {
       grouped[region].sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    console.log('cafesByRegion result:', Object.keys(grouped));
     return grouped;
-  }, []);
+  }, [cafes]);
 
   // Get filtered counts by region for current mode
   const getFilteredRegionCount = (region: string) => {
@@ -89,20 +92,28 @@ export default function Home() {
 
   // Filter cafés based on mode and region
   const currentCafes = useMemo(() => {
+    console.log('currentCafes useMemo - initial cafes length:', cafes.length);
+    console.log('isCoffeeMode:', isCoffeeMode);
+    console.log('activeRegion:', activeRegion);
+
     let filtered = cafes;
 
     // Filter by mode (coffee vs bubble tea)
     if (isCoffeeMode) {
       filtered = filtered.filter(cafe => cafe.features.includes('coffee') || cafe.features.includes('vietnamese coffee'));
+      console.log('After coffee filter:', filtered.length);
     } else {
       filtered = filtered.filter(cafe => cafe.features.includes('bubble tea'));
+      console.log('After bubble tea filter:', filtered.length);
     }
 
     // Filter by region
     if (activeRegion === 'recommended') {
       filtered = filtered.filter(cafe => cafe.recommended);
+      console.log('After recommended filter:', filtered.length);
     } else if (activeRegion !== 'all') {
       filtered = filtered.filter(cafe => cafe.region === activeRegion);
+      console.log('After region filter:', filtered.length);
     }
 
     // Sort alphabetically by name for all regions tab
@@ -110,8 +121,9 @@ export default function Home() {
       filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    console.log('Final currentCafes length:', filtered.length);
     return filtered;
-  }, [isCoffeeMode, activeRegion]);
+  }, [cafes, isCoffeeMode, activeRegion]);
 
   // Group cafés by name for recommended view
   const groupedCafes = useMemo(() => {
@@ -291,6 +303,46 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Fetch cafes data from API
+  useEffect(() => {
+    const fetchCafes = async () => {
+      try {
+        console.log('Fetching cafes from API...');
+        const response = await fetch('/api/cafes');
+        console.log('API response status:', response.status);
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched cafes:', data);
+          console.log('Data length:', data?.length);
+          console.log('First cafe from API:', data?.[0]);
+          setCafes(data);
+          console.log('Cafes state set, length:', data?.length);
+        } else {
+          console.error('Failed to fetch cafes:', response.status, response.statusText);
+          // Fallback to static data if API fails
+          const { cafes: staticCafes } = await import('../data/cafes');
+          console.log('Using static data as fallback:', staticCafes);
+          setCafes(staticCafes);
+        }
+      } catch (error) {
+        console.error('Error fetching cafes:', error);
+        // Fallback to static data if API fails
+        try {
+          const { cafes: staticCafes } = await import('../data/cafes');
+          console.log('Using static data as fallback due to error:', staticCafes);
+          setCafes(staticCafes);
+        } catch (fallbackError) {
+          console.error('Failed to load static data as well:', fallbackError);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCafes();
+  }, []);
+
   // Add global mouse tracking (disabled on mobile)
   useEffect(() => {
     setIsHydrated(true);
@@ -454,44 +506,56 @@ export default function Home() {
         </div>
       )}
 
-      {/* Region Tabs */}
-      <div>
-        <div className="px-6">
-          <div className="max-w-4xl mx-auto">
-            <nav className="flex space-x-8 overflow-x-auto pb-2 -mb-2">
-              {regions.map((region) => (
-                <button
-                  key={region}
-                  onClick={() => setActiveRegion(region)}
-                  onMouseEnter={() => setIsHovering('clickable')}
-                  onMouseLeave={() => setIsHovering(false)}
-                  className={`region-tab py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                    activeRegion === region
-                      ? isCoffeeMode
-                        ? 'border-coffee-secondary text-coffee-secondary'
-                        : 'border-bubbleTea-secondary text-bubbleTea-secondary'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {region === 'all' ? 'all regions' : region === 'recommended' ? 'recommended' : region}
-                  <span className="ml-2 text-xs">
-                    ‹ {getFilteredRegionCount(region)} ›
-                  </span>
-                </button>
-              ))}
-            </nav>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="px-6 py-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-gray-500">Loading cafés...</p>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Simple Numbered List */}
-      <div className="px-6 py-6">
-        <div className="max-w-4xl mx-auto">
-          {currentCafes.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">no cafés found in this region (yet)</p>
+      {/* Region Tabs */}
+      {!isLoading && (
+        <div>
+          <div className="px-6">
+            <div className="max-w-4xl mx-auto">
+              <nav className="flex space-x-8 overflow-x-auto pb-2 -mb-2">
+                {regions.map((region) => (
+                  <button
+                    key={region}
+                    onClick={() => setActiveRegion(region)}
+                    onMouseEnter={() => setIsHovering('clickable')}
+                    onMouseLeave={() => setIsHovering(false)}
+                    className={`region-tab py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                      activeRegion === region
+                        ? isCoffeeMode
+                          ? 'border-coffee-secondary text-coffee-secondary'
+                          : 'border-bubbleTea-secondary text-bubbleTea-secondary'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {region === 'all' ? 'all regions' : region === 'recommended' ? 'recommended' : region}
+                    <span className="ml-2 text-xs">
+                      ‹ {getFilteredRegionCount(region)} ›
+                    </span>
+                  </button>
+                ))}
+              </nav>
             </div>
-                    ) : activeRegion === 'recommended' ? (
+          </div>
+        </div>
+      )}
+
+            {/* Simple Numbered List */}
+      {!isLoading && (
+        <div className="px-6 py-6">
+          <div className="max-w-4xl mx-auto">
+            {currentCafes.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500">no cafés found in this region (yet)</p>
+              </div>
+            ) : activeRegion === 'recommended' ? (
             // Pantone tile layout for recommended
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {displayCafes.map((cafe, index) => {
@@ -589,21 +653,13 @@ export default function Home() {
                       ⚲ {cafe.location}
                     </div>
                   </div>
-                  {cafe.features && cafe.features.length > 0 && (
-                    <div className={`text-sm text-gray-500 ml-4 text-right italic ${
-                      isCoffeeMode
-                        ? 'group-hover:text-coffee-primary'
-                        : 'group-hover:text-bubbleTea-primary'
-                    }`}>
-                      {cafe.features.join(', ')}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+      )}
 
       {/* Footer spacing */}
       <div className="h-16"></div>
