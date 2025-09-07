@@ -432,7 +432,7 @@ export default function Home() {
                   danel's WORK IN PROGRESS personal café list
                 </p>
                 <p className="text-sm text-gray-700">
-                  mostly alphabetical for the time being, look on desktop not mobile pls
+                  cursor ai test project, look on desktop not mobile pls
                 </p>
               </div>
               <div className="flex space-x-4">
