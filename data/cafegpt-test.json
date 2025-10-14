@@ -1,0 +1,56 @@
+[
+  {
+    "id": "t1",
+    "name": "rikka fika",
+    "location": "east village",
+    "region": "san diego, CA, USA",
+    "notes": "high end coffee and matcha, good pastries, minimal and clean japanese aesthetic",
+    "recommended": true,
+    "image": "/images/cafes/rikka-fika.jpeg"
+  },
+  {
+    "id": "t2",
+    "name": "dot café",
+    "location": "carmel valley",
+    "region": "san diego, CA, USA",
+    "notes": "delicious breakfast burrito, a lot of seating with greenery, community vibe, good for working",
+    "recommended": true,
+    "image": "/images/cafes/dot-cafe.jpeg"
+  },
+  {
+    "id": "t3",
+    "name": "tea n more",
+    "location": "convoy",
+    "region": "san diego, CA, USA",
+    "notes": "bubble tea nostalgic and chill spot, cute intimate community events, good for working",
+    "recommended": true,
+    "image": "/images/cafes/tea-n-more.jpeg"
+  },
+  {
+    "id": "t4",
+    "name": "omomo tea shoppe",
+    "location": "irvine",
+    "region": "orange county, CA, USA",
+    "notes": "bubble tea spot, omomo matcha is good, often long lines",
+    "recommended": true,
+    "image": "/images/cafes/omomo.jpeg"
+  },
+  {
+    "id": "t5",
+    "name": "prolog coffee",
+    "location": "københavn / copenhagen",
+    "region": "denmark",
+    "notes": "high end coffee, roastery, good for working",
+    "recommended": true,
+    "image": "/images/cafes/prolog-coffee.jpeg"
+  },
+  {
+    "id": "t6",
+    "name": "café notion",
+    "location": "北京 / beijing",
+    "region": "china",
+    "notes": "aesthetic modern design with greenery, very spacious, good for working, interesting drinks",
+    "recommended": true,
+    "image": "/images/cafes/cafe-notion.jpeg"
+  }
+]

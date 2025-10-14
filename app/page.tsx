@@ -6,6 +6,8 @@ import { Cafe, GroupedCafe } from '../types/cafe';
 import { Inter, Overpass, DM_Serif_Display, Archivo } from 'next/font/google';
 import CafeImage from '../components/CafeImage';
 import ThemeToggle from '../components/ThemeToggle';
+import dynamic from 'next/dynamic';
+const CafeGPTWidget = dynamic(() => import('../components/CafeGPTWidget'), { ssr: false });
 
 const inter = Inter({ subsets: ['latin'] });
 const overpass = Overpass({ subsets: ['latin'] });
@@ -658,6 +660,9 @@ export default function Home() {
 
       {/* Footer spacing */}
       <div className="h-16"></div>
+
+      {/* CafeGPT floating widget */}
+      <CafeGPTWidget />
     </div>
   );
 }
