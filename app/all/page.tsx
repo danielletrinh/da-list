@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { dmSans, workSans } from '@/lib/fonts';
 import { useHover } from '@/components/CustomCursor';
-import type { Cafe } from '@/types/cafe';
+import type { Cafe, CafeRow } from '@/types/cafe';
 
 const SEP = '、';
 
@@ -13,7 +13,7 @@ const WALL_MAX_WIDTH = 720;
 
 export default function AllPage() {
   const { setHoverState } = useHover();
-  const [cafes, setCafes] = useState<Cafe[]>([]);
+  const [cafes, setCafes] = useState<CafeRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
@@ -53,6 +53,21 @@ export default function AllPage() {
 
   const totalCount = cafes.length;
 
+  const lastUpdated = useMemo(() => {
+    if (cafes.length === 0) return null;
+    const sorted = [...cafes].sort((a, b) => {
+      const aTime = new Date(a.created_at || 0).getTime();
+      const bTime = new Date(b.created_at || 0).getTime();
+      return bTime - aTime;
+    });
+    const mostRecent = sorted[0];
+    const dateStr = mostRecent.created_at;
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    const formatted = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    return { date: formatted, name: mostRecent.name };
+  }, [cafes]);
+
   return (
     <div className="min-h-screen bg-primary-offBlack">
       <header className="px-4 sm:px-6 pt-12 sm:pt-16 pb-4">
@@ -64,7 +79,9 @@ export default function AllPage() {
                 <span className="text-primary-primary"> 」</span>
               </h1>
               <p className={`text-sm text-primary-pureWhite ${dmSans.className} italic`}>
-                last updated on 2026.02.10 with ⛾ KOS COFFEE CO.
+                {lastUpdated
+                  ? `last updated on ${lastUpdated.date} with ⛾ ${lastUpdated.name}`
+                  : '—'}
               </p>
             </div>
             <div className="pt-4 sm:pt-16">
