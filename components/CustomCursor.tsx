@@ -36,21 +36,19 @@ export default function CustomCursor() {
   const lastMouseMove = useRef(0);
   const { hoverState } = useHover();
 
-  const handleGlobalMouseMove = (e: MouseEvent) => {
-    const now = Date.now();
-    if (now - lastMouseMove.current < 16) return;
-    lastMouseMove.current = now;
-
+  const updatePosition = (x: number, y: number) => {
     if (!hoverState || hoverState === 'card' || hoverState === 'help') {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
+      setCursorPosition({ x, y });
     }
+  };
 
+  const maybeAddSparkle = (x: number, y: number) => {
     if (window.innerWidth > 768 && Math.random() < 0.25) {
       const symbols = ['⋆', '.', '˚', '•'];
       const newSparkle = {
         id: sparkleId.current++,
-        x: e.clientX + (Math.random() - 0.5) * 30,
-        y: e.clientY + (Math.random() - 0.5) * 30,
+        x: x + (Math.random() - 0.5) * 30,
+        y: y + (Math.random() - 0.5) * 30,
         opacity: 0.8,
         symbol: symbols[Math.floor(Math.random() * symbols.length)],
       };
@@ -60,6 +58,20 @@ export default function CustomCursor() {
         return updated.slice(-30);
       });
     }
+  };
+
+  const handleGlobalMouseMove = (e: MouseEvent) => {
+    const now = Date.now();
+    if (now - lastMouseMove.current < 16) return;
+    lastMouseMove.current = now;
+    updatePosition(e.clientX, e.clientY);
+    maybeAddSparkle(e.clientX, e.clientY);
+  };
+
+  const handleGlobalTouchMove = (e: TouchEvent) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    updatePosition(touch.clientX, touch.clientY);
   };
 
   useEffect(() => {
@@ -79,7 +91,13 @@ export default function CustomCursor() {
 
   useEffect(() => {
     document.addEventListener('mousemove', handleGlobalMouseMove);
-    return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+    document.addEventListener('touchstart', handleGlobalTouchMove, { passive: true });
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+      document.removeEventListener('touchstart', handleGlobalTouchMove);
+    };
   }, []);
 
   return (

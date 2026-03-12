@@ -31,6 +31,16 @@ html, body, * {
   }
 }
 
+.tooltip-position {
+  transform: translate(8px, 8px);
+}
+
+@media (max-width: 640px) {
+  .tooltip-position {
+    transform: translate(calc(-100% - 8px), 8px);
+  }
+}
+
 .custom-cursor {
   position: fixed;
   width: 20px;

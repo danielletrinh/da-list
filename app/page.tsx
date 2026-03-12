@@ -85,11 +85,25 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, [displayCafes, isHydrated, preloadedImages]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const handlePointerMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement;
-    el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-    el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    const rect = el.getBoundingClientRect();
+
+    let clientX: number;
+    let clientY: number;
+
+    if ('touches' in e) {
+      const touch = e.touches[0];
+      if (!touch) return;
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    el.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
+    el.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
   };
 
   const handlePantoneEnter = (cafeId: string) => () => {
@@ -176,7 +190,11 @@ export default function Home() {
                   <div
                     key={cafe.id}
                     className="w-full group relative"
-                    onMouseMove={handleMouseMove}
+                    onMouseMove={handlePointerMove}
+                    onTouchMove={handlePointerMove}
+                    onTouchStart={handlePantoneEnter(cafe.id)}
+                    onTouchEnd={handlePantoneLeave}
+                    onTouchCancel={handlePantoneLeave}
                     onMouseEnter={handlePantoneEnter(cafe.id)}
                     onMouseLeave={handlePantoneLeave}
                   >
@@ -207,11 +225,10 @@ export default function Home() {
 
                     {hoveredCardId === cafe.id && (
                       <div
-                        className="absolute opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                        className="absolute opacity-100 transition-opacity duration-200 pointer-events-none z-10 tooltip-position"
                         style={{
                           left: 'var(--mouse-x, 0px)',
                           top: 'var(--mouse-y, 0px)',
-                          transform: 'translate(8px, 8px)',
                           willChange: 'transform'
                         }}
                       >
