@@ -128,8 +128,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:justify-between sm:text-left gap-4">
             <div className="flex flex-col items-center sm:items-start">
-              <h1 className="font-dirtyline text-[40px] font-medium text-primary-pureWhite pt-10 sm:-ml-6">
-                <span className="text-primary-primary">「 café</span>xcursions<span className="text-primary-primary"> 」</span>
+              <h1 className="font-dirtyline text-4xl sm:text-5xl font-medium text-primary-pureWhite pt-10 sm:-ml-6">
+              <span className="text-primary-primary">「 café</span>xcursions<span className="text-primary-primary"> 」</span>
               </h1>
               <p className={`text-sm text-primary-pureWhite ${dmSans.className} italic`}>
                 <a
@@ -137,7 +137,7 @@ export default function Home() {
                 onMouseEnter={() => setHoverState('help')}
                 onMouseLeave={() => setHoverState(false)}
               >
-                my favourites from around the world, not quite a ranked list &lt;3
+                my favourites (not by ranking) from around the world &lt;3
               </a>
               </p>
             </div>

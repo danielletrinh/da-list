@@ -74,7 +74,7 @@ export default function AllPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:justify-between sm:text-left gap-4">
             <div className="flex flex-col items-center sm:items-start">
-              <h1 className="font-dirtyline text-[40px] font-medium text-primary-pureWhite pt-10 sm:-ml-6">
+              <h1 className="font-dirtyline text-4xl sm:text-5xl font-medium text-primary-pureWhite pt-10 sm:-ml-6">
                 <span className="text-primary-primary">「 café</span>xcursions
                 <span className="text-primary-primary"> 」</span>
               </h1>
@@ -103,11 +103,11 @@ export default function AllPage() {
         ) : (
           <>
             <div
-              className="grid grid-cols-[1fr_auto] gap-4 flex-shrink-0 items-stretch"
+              className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 flex-shrink-0 items-stretch"
               style={{ width: 'max-content', maxWidth: '100%' }}
             >
               <div
-                className={`min-h-0 bg-primary-offBlack box-border text-primary-hiding overflow-auto ${workSans.className}`}
+                className={`min-h-0 bg-primary-offBlack box-border text-primary-hiding overflow-auto order-2 sm:order-1 ${workSans.className}`}
                 style={{
                   maxWidth: WALL_MAX_WIDTH,
                   fontSize: '9px',
@@ -137,7 +137,7 @@ export default function AllPage() {
                 })}
               </div>
               <div
-                className={`flex flex-col justify-center gap-0.5 pt-1 ${workSans.className} text-[12px] sm:text-xs text-primary-pureWhite`}
+                className={`flex flex-col items-center sm:items-start justify-center gap-0.5 pt-1 order-1 sm:order-2 ${workSans.className} text-[12px] sm:text-xs text-primary-pureWhite`}
               >
                 {regionsWithCounts.map(([region, count]) => {
                   const isHovered = hoveredRegion === region;
