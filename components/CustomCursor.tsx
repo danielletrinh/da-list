@@ -32,7 +32,6 @@ export default function CustomCursor() {
     opacity: number;
     symbol: string;
   }>>([]);
-  const [isMobile, setIsMobile] = useState(false);
   const sparkleId = useRef(0);
   const lastMouseMove = useRef(0);
   const { hoverState } = useHover();
@@ -79,20 +78,9 @@ export default function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
   }, []);
-
-  useEffect(() => {
-    if (!isMobile) {
-      document.addEventListener('mousemove', handleGlobalMouseMove);
-      return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
-    }
-  }, [isMobile]);
-
-  if (isMobile) return null;
 
   return (
     <>

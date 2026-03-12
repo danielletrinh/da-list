@@ -15,6 +15,13 @@ html, body, * {
   user-select: none;
 }
 
+@media (max-width: 640px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
