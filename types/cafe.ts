@@ -1,3 +1,4 @@
+/** Client-facing café (subset of DB row). */
 export interface Cafe {
   id: string;
   name: string;
@@ -6,6 +7,14 @@ export interface Cafe {
   features: string[];
   recommended: boolean;
   image?: string;
+  description?: string;
+}
+
+/** Full row from Supabase `cafes` table. */
+export interface CafeRow extends Cafe {
+  rank: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface GroupedCafe {
@@ -16,6 +25,7 @@ export interface GroupedCafe {
   features: string[];
   recommended: boolean;
   image?: string;
+  description?: string;
 }
 
 export type ViewMode = 'list' | 'grid' | 'map' | 'chart';

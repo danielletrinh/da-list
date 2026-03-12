@@ -1,23 +1,14 @@
 import type { Metadata } from 'next'
-import { Inter, Overpass, DM_Serif_Display, Archivo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { overpass } from '@/lib/fonts'
+import { HoverProvider } from '@/components/CustomCursor'
+import CustomCursor from '@/components/CustomCursor'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-const overpass = Overpass({ subsets: ['latin'] })
-const dmSerifDisplay = DM_Serif_Display({
-  subsets: ['latin'],
-  weight: '400'
-})
-const archivo = Archivo({
-  subsets: ['latin'],
-  weight: '700'
-})
-
 export const metadata: Metadata = {
-  title: '[ DA ] LIST .𖥔 ݁ ˖',
-  description: 'danel\'s personal café list; loosely ranked based on quality + aesthetic + vibes',
+  title: '「 caféxcursions 」',
+  description: 'danel\'s personal café list; loosely evaluated based on quality + aesthetic + vibes',
 }
 
 export default function RootLayout({
@@ -26,11 +17,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={overpass.className}>
-        <div className="min-h-screen bg-gray-50">
-          {children}
-        </div>
+    <html lang="en" className="bg-primary-offBlack">
+      <body className={`${overpass.className} bg-primary-offBlack`}>
+        <HoverProvider>
+          <div className="min-h-screen bg-primary-offBlack">
+            {children}
+          </div>
+          <CustomCursor />
+        </HoverProvider>
         <Analytics />
         <SpeedInsights />
       </body>

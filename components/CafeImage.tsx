@@ -4,13 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 interface CafeImageProps {
   src: string;
   alt: string;
-  isCoffeeMode: boolean;
   className?: string;
   priority?: boolean;
   isPreloaded?: boolean;
 }
 
-export default function CafeImage({ src, alt, isCoffeeMode, className = "", priority = false, isPreloaded = false }: CafeImageProps) {
+export default function CafeImage({ src, alt, className = "", priority = false, isPreloaded = false }: CafeImageProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(!isPreloaded);
   const [isVisible, setIsVisible] = useState(priority || isPreloaded);

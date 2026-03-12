@@ -1,55 +1,31 @@
+@font-face {
+  font-family: 'Dirtyline 36Daysoftype 2022';
+  src: url('/fonts/Dirtyline%2036daysoftype%202022.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  min-height: 100vh;
-}
-
-/* Disable default cursor only on desktop */
-@media (min-width: 768px) {
-  body {
-    cursor: none;
-  }
-}
-
-html {
-  background: rgb(var(--background-start-rgb));
-  min-height: 100vh;
+html, body, * {
+  cursor: none !important;
+  user-select: none;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .font-dirtyline {
+    font-family: 'Dirtyline 36Daysoftype 2022', sans-serif;
+  }
 }
 
-/* Custom cursor */
 .custom-cursor {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 20px;
   height: 20px;
   pointer-events: none;
@@ -58,7 +34,8 @@ html {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: black;
+  color: white;
+  mix-blend-mode: difference;
   transition: transform 0.1s ease;
   will-change: transform;
 }
@@ -69,14 +46,8 @@ html {
 
 .custom-cursor.clickable {
   font-size: 18px;
-  color: black;
 }
 
-/* Disable default cursor on clickable elements (desktop only) */
-@media (min-width: 768px) {
-  .toggle-button,
-  .region-tab,
-  .group {
-    cursor: none !important;
-  }
+.custom-cursor.help {
+  font-size: 18px;
 }

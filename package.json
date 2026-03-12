@@ -9,9 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
-    "@dnd-kit/utilities": "^3.2.2",
     "@supabase/supabase-js": "^2.52.1",
     "@types/node": "20.10.5",
     "@types/react": "18.2.45",
@@ -21,11 +18,11 @@
     "autoprefixer": "10.4.16",
     "dotenv": "^17.2.1",
     "lucide-react": "0.294.0",
-    "next": "14.0.4",
+    "next": "^16.1.6",
     "postcss": "8.4.32",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "recharts": "2.8.0",
+    "styled-jsx": "^5.1.6",
     "tailwindcss": "3.3.6",
     "typescript": "5.3.3"
   },
